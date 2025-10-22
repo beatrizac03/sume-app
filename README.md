@@ -1,11 +1,37 @@
-# Sample Snack app
+# Sumé App - React Native
 
-Open the `App.js` file to start writing some code. You can preview the changes directly on your phone or tablet by scanning the **QR code** or use the iOS or Android emulators. When you're done, click **Save** and share the link!
+O Sumé App é um aplicativo desenvolvido com React Native, que visa enfatizar a disponibilização de informações sobre a legislação brasileira para a população. Seu conceito é ser uma IA, para tal, implementamos a API do Gemini no app.
 
-When you're ready to see everything that Expo provides (or if you want to use your own editor) you can **Download** your project and use it with [expo cli](https://docs.expo.dev/get-started/installation/#expo-cli)).
+## 📥 Clonando o projeto
 
-All projects created in Snack are publicly available, so you can easily share the link to this project via link, or embed it on a web page with the `<>` button.
+Clone o repositório no seu computador:
+```bash
+git clone https://github.com/beatrizac03/sume-app.git
+cd sume-app
+```
 
-If you're having problems, you can tweet to us [@expo](https://twitter.com/expo) or ask in our [forums](https://forums.expo.dev/c/expo-dev-tools/61) or [Discord](https://chat.expo.dev/).
+Instale todas as dependências do projeto
+```bash
+npm install
+```
 
-Snack is Open Source. You can find the code on the [GitHub repo](https://github.com/expo/snack).
+Inicie o servidor do Expo
+```bash
+npm expo start
+```
+
+Ao iniciar o servidor, o terminal irá logar um QR Code, scaneie com o app Expo GO no Iphone ou Android, ou pressione w para abrir no navegador
+
+O app irá rodar localmente e atualizar automaticamente quando você fizer alterações.
+
+## 🔐 Variáveis de ambiente
+
+1. Crie um arquivo .env na raiz do projeto
+```bash
+GEMINI_KEY=suachavegemini
+```
+
+2. Instale a biblioteca react-native-dotenv:
+```bash
+npm install react-native-dotenv
+```
