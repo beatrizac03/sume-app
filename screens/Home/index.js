@@ -1,58 +1,57 @@
-import React, { useEffect, useRef } from 'react';
-import { Text, SafeAreaView, StyleSheet, View, Animated } from 'react-native';
+import React from 'react';
+import { Text, SafeAreaView, StyleSheet, View, Platform } from 'react-native';
+
+import ChatUI from '../../components/ChatUI.js'; 
 
 export default function HomeScreen() {
+
   return (
-    <>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
 
         <View style={styles.header}>
           <Text style={styles.title}>Sumé</Text>
         </View>
 
-        <View style={styles.chatContainer}>
-
+        <View style={styles.chatWrapper}>
+          <ChatUI />
         </View>
 
-        <View style={styles.textareaContainer}>
-
-        </View>
+        <View style={styles.footer}></View>
 
       </View>
-    </>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 30,
-    paddingBottom: 30
+    justifyContent: 'flex-start', 
   },
   header: {
-    height: '10%',
+    height: 60,
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'blue'
-  },
-  chatContainer: {
-    height: '65%',
-    borderColor: 'green',
-    borderWidth: 1,
-    width: '100%',
-  },
-  textareaContainer: {
-    height: '25%',
-    borderColor: 'red',
-    borderWidth: 1,
-    width: '100%'
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEEEEE',
+    paddingHorizontal: 15,
   },
   title: {
     fontSize: 20,
     fontWeight: '600',
     color: '#242852',
+  },
+  chatWrapper: {
+    flex: 1,
+  },
+  footer: {
+    height: 0,
   },
 });
