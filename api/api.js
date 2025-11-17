@@ -1,8 +1,8 @@
-import { GEMINI_API_KEY } from '@env';
+import Constants from 'expo-constants';
 
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+const ai = new GoogleGenAI({ apiKey: Constants.expoConfig.extra.API_URL });
 
 export async function sendChatPrompt(history) {
   try {
