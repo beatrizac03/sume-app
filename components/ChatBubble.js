@@ -27,14 +27,14 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     alignSelf: 'flex-end',
-    backgroundColor: '#007AFF',
+    backgroundColor: '#EEEEEE',
   },
   geminiContainer: {
     alignSelf: 'flex-start',
-    backgroundColor: '#E5E5EA',
+    backgroundColor: '#FFFFFF',
   },
   userText: {
-    color: '#FFFFFF',
+    color: '#000000',
     fontSize: 16,
   },
   geminiText: {

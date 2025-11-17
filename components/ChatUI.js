@@ -9,7 +9,8 @@ import {
   StyleSheet, 
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform 
+  Platform,
+  Image
 } from 'react-native';
 
 import ChatBubble from './ChatBubble.js';
@@ -86,7 +87,7 @@ const ChatUI = () => {
       {isLoading && (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="small" color="#007AFF" />
-          <Text style={styles.loadingText}>Gemini está pensando...</Text>
+          <Text style={styles.loadingText}>Sumé está pensando...</Text>
         </View>
       )}
 
@@ -104,7 +105,9 @@ const ChatUI = () => {
           onPress={handleSend}
           disabled={isLoading}
         >
-          <Text style={styles.sendButtonText}>Enviar</Text>
+          
+            <Image source={require('../assets/icon-send.png')} />
+          
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -114,7 +117,7 @@ const ChatUI = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F7F7F7',
+    backgroundColor: '#FFFFFF',
     paddingTop: Platform.OS === 'android' ? 30 : 0,
   },
   chatContainer: {
@@ -150,7 +153,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   sendButton: {
-    backgroundColor: '#007AFF',
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 15,
