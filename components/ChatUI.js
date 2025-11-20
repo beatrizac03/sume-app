@@ -13,17 +13,27 @@ import {
   Image
 } from 'react-native';
 
+import { useContext } from "react";
+import { ChatContext } from "../context/ChatContext";
+
 import ChatBubble from './ChatBubble.js';
 import { sendChatPrompt } from '../api/api.js';
+
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const ChatUI = () => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const [requestCount, setRequestCount] = useState(0);
   
   const flatListRef = useRef(null);
 
+  const { addChat } = useContext(ChatContext);
+
   const handleSend = async () => {
+
     if (inputMessage.trim() === '' || isLoading) return;
 
     const userMessage = { 
@@ -96,7 +106,8 @@ const ChatUI = () => {
           style={styles.input}
           value={inputMessage}
           onChangeText={setInputMessage}
-          placeholder="Digite sua mensagem..."
+          placeholder="Faça uma pergunta à Sumé..."
+          placeholderTextColor="#888"
           editable={!isLoading}
           multiline
         />
@@ -105,8 +116,8 @@ const ChatUI = () => {
           onPress={handleSend}
           disabled={isLoading}
         >
-          
-            <Image source={require('../assets/icon-send.png')} />
+
+          <MaterialCommunityIcons name="send-circle" size={35} color="#61BC50" />
           
         </TouchableOpacity>
       </View>
@@ -136,33 +147,32 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'row',
-    padding: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#DDD',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     backgroundColor: '#FFF',
     alignItems: 'center',
+    height: '20%',
+    width: '100%'
   },
   input: {
     flex: 1,
-    maxHeight: 100,
     backgroundColor: '#F0F0F0',
     borderRadius: 20,
     paddingHorizontal: 15,
-    paddingVertical: 8,
-    marginRight: 10,
+    paddingVertical: 15,
     fontSize: 16,
+    height: '100%'
   },
   sendButton: {
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 5,
+    position: 'absolute',
+    right: 25,
+    bottom: 15,
   },
-  sendButtonText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-  },
+  sendButtonImage: {
+    width: 30,
+    height: 30,
+  }
 });
 
 export default ChatUI;

@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, SafeAreaView, StyleSheet, View, Platform } from 'react-native';
 
 import ChatUI from '../../components/ChatUI.js'; 
+import Menu from '../../components/Menu.js';
 
 export default function HomeScreen() {
 
@@ -10,7 +11,8 @@ export default function HomeScreen() {
       <View style={styles.container}>
 
         <View style={styles.header}>
-          <Text style={styles.title}>Sumé</Text>
+          <Menu style={styles.menu}  />
+          <Text style={styles.title}>Sumé IA</Text>
         </View>
 
         <View style={styles.chatWrapper}>
@@ -36,12 +38,19 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 60,
+    display: 'flex',
+    flexDirection: 'row',
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#EEEEEE',
     paddingHorizontal: 15,
+    position: 'relative',
+  },
+  menu: {
+    position: 'absolute',
+    left: 15,
   },
   title: {
     fontSize: 20,

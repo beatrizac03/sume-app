@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 
+import { ChatProvider } from './contexts/ChatContext.js';
+
 import { Text, SafeAreaView, StyleSheet } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -27,12 +29,14 @@ export default function App() {
   if (!fontsLoaded) return null; // ainda carregando
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={defaultOptions}>
-        <Stack.Screen name="splash" component={SplashScreen} options={splashOptions} />
-        <Stack.Screen name="home" component={HomeScreen} options={homeOptions} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ChatProvider>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={defaultOptions}>
+          {/* <Stack.Screen name="splash" component={SplashScreen} options={splashOptions} /> */}
+          <Stack.Screen name="home" component={HomeScreen} options={homeOptions} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ChatProvider>
   );
 }
 
