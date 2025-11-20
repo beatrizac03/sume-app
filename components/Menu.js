@@ -10,7 +10,8 @@ export default function Menu({ style }) {
 
     const [visible, setVisible] = useState(false);
 
-    const { chats, setCurrentChatId, deleteChat } = useContext(ChatContext);
+    const { chats, setCurrentChatId, deleteChat, createEmptyChat } = useContext(ChatContext);
+
     return(
         <>
          <TouchableOpacity style={style} onPress={() => setVisible(true)} value={visible}>
@@ -29,28 +30,48 @@ export default function Menu({ style }) {
                             <Entypo name="menu" size={35} color="#fff"  />  
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={{ position: 'absolute', right: 15, top: 5 }}>
-                            <Ionicons name="create-outline" size={25} color="#fff" />
+                        <TouchableOpacity
+                        style={{ position: 'absolute', right: 15, top: 5 }}
+                        onPress={() => {
+                            createEmptyChat();
+                            setVisible(false); // fecha o menu ao criar
+                        }}
+                        >
+                        <Ionicons name="create-outline" size={25} color="#fff" />
                         </TouchableOpacity>
                     </View>
 
                     <Text style={{ fontSize: 22, color: '#fff', margin: 20, marginTop: 80 }}>Chats</Text>
 
-                    {chats.map(chat => (
-                        <TouchableOpacity 
-                            key={chat.id}
-                            style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 15, borderBottomWidth: 1, borderBottomColor: '#444' }}
-                            onPress={() => {
-                                setCurrentChatId(chat.id);
-                                setVisible(false);
-                            }}
-                        >
-                            <Text style={{ fontSize: 18, color: '#fff' }}>{chat.label}</Text>
-                            <TouchableOpacity onPress={() => deleteChat(chat.id)}>
-                                <Ionicons name="trash-outline" size={20} color="#fff" />
+                    {chats.map(chat => {
+                        const firstUserMessage = chat.history.find(m => m.sender === "user")?.text;
+
+                        return (
+                            <TouchableOpacity 
+                                key={chat.id}
+                                style={{
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    padding: 15,
+                                    borderBottomWidth: 1,
+                                    borderBottomColor: '#444'
+                                }}
+                                onPress={() => {
+                                    setCurrentChatId(chat.id);
+                                    setVisible(false);
+                                }}
+                            >
+                                <Text style={{ fontSize: 18, color: '#fff' }}>
+                                {firstUserMessage  || "Novo chat"}
+                                </Text>
+
+                                <TouchableOpacity onPress={() => deleteChat(chat.id)}>
+                                    <Ionicons name="trash-outline" size={20} color="#fff" />
+                                </TouchableOpacity>
                             </TouchableOpacity>
-                        </TouchableOpacity>
-                    ))}
+                        );
+                    })}
                 </ScrollView>
             </SafeAreaView>
         </Modal>

@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { v4 as uuid } from "uuid";
+import uuid from 'react-native-uuid';
 
 export const ChatContext = createContext();
 
@@ -23,21 +23,34 @@ export function ChatProvider({ children }) {
     await AsyncStorage.setItem("@chats", JSON.stringify(newChats));
   }
 
+  async function createEmptyChat() {
+    const newChat = {
+      id: uuid.v4(),
+      history: []
+    };
+
+    const updated = [...chats, newChat];
+    await saveChats(updated);
+
+    setCurrentChatId(newChat.id);
+    return newChat;
+  }
+
   // CRIAR CHAT (igual seu utils)
   async function createChat(question, answer) {
     const newChat = {
-      id: uuid(),
+      id: uuid.v4(),
       history: [
         {
-          id: uuid(),
-          role: "user",
-          content: question,
+          id: uuid.v4(),
+          sender: "user",
+          text: question,
           dateTime: new Date().toISOString()
         },
         {
-          id: uuid(),
-          role: "assistant",
-          content: answer,
+          id: uuid.v4(),
+          sender: "model",
+          text: answer,
           dateTime: new Date().toISOString()
         },
       ]
@@ -56,7 +69,21 @@ export function ChatProvider({ children }) {
       if (chat.id === chatId) {
         return {
           ...chat,
-          history: [...chat.history, { question, answer }]
+          history: [
+            ...chat.history,
+            {
+              id: uuid.v4(),
+              sender: "user",
+              text: question,
+              dateTime: new Date().toISOString()
+            },
+            {
+              id: uuid.v4(),
+              sender: "model",
+              text: answer,
+              dateTime: new Date().toISOString()
+            }
+          ]
         };
       }
       return chat;
@@ -88,7 +115,8 @@ export function ChatProvider({ children }) {
         createChat,
         addMessageToChat,
         getChat,
-        deleteChat
+        deleteChat,
+        createEmptyChat
       }}
     >
       {children}

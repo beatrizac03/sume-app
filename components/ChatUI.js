@@ -1,5 +1,5 @@
 // ChatScreen.js
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   View, 
   TextInput, 
@@ -9,12 +9,12 @@ import {
   StyleSheet, 
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform,
-  Image
+  Platform
 } from 'react-native';
 
 import { useContext } from "react";
-import { ChatContext } from "../context/ChatContext";
+import { ChatContext } from "../contexts/ChatContext.js";
+import uuid from 'react-native-uuid';
 
 import ChatBubble from './ChatBubble.js';
 import { sendChatPrompt } from '../api/api.js';
@@ -26,20 +26,33 @@ const ChatUI = () => {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const [requestCount, setRequestCount] = useState(0);
+  const { createChat, currentChatId, addMessageToChat, chats } = useContext(ChatContext);
+
+  useEffect(() => {
+    if (!currentChatId) {
+      setMessages([]);
+      return;
+    }
+
+    const chat = chats.find(c => c.id === currentChatId);
+    if (chat) {
+      setMessages(chat.history);
+    }
+  }, [currentChatId, chats]);
   
   const flatListRef = useRef(null);
 
-  const { addChat } = useContext(ChatContext);
-
-  const handleSend = async () => {
-
+  async function handleSendPrompt() {
+    // caso a msg esteja vazia ou esteja carregando, não faz nada
     if (inputMessage.trim() === '' || isLoading) return;
+    
+    const messageText = inputMessage.trim();
 
     const userMessage = { 
-      id: Date.now(), 
-      text: inputMessage.trim(), 
-      sender: 'user' 
+      id: uuid.v4(), 
+      text: messageText, 
+      sender: 'user',
+      dateTime: new Date().toISOString() 
     };
 
     const newMessages = [...messages, userMessage];
@@ -48,31 +61,46 @@ const ChatUI = () => {
     setIsLoading(true);
 
     setTimeout(() => flatListRef.current.scrollToEnd({ animated: true }), 100);
+    
+    // passa o historico completo de mensagens (const local) para o Gemini
+    await requestGemini(newMessages, messageText);
+  };
 
+  async function requestGemini(newMessages, questionText) {
     try {
       const geminiText = await sendChatPrompt(newMessages);
 
       const geminiMessage = {
-        id: Date.now() + 1,
+        id: uuid.v4(),
         text: geminiText,
         sender: 'model',
+        dateTime: new Date().toISOString()
       };
 
       setMessages(prev => [...prev, geminiMessage]);
+
+      // se não houver chat atual, cria um novo
+      if (!currentChatId) {
+        await createChat(questionText, geminiText);
+      } else {
+        // adiciona a mensagem ao chat existente
+        await addMessageToChat(currentChatId, questionText, geminiText);
+      }
       
     } catch (error) {
       console.error("Erro na conversação:", error);
       const errorMessage = {
-        id: Date.now() + 1,
+        id: uuid.v4(),
         text: "Erro: Não foi possível conectar ao Gemini.",
         sender: 'model',
+        dateTime: new Date().toISOString()
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
       setTimeout(() => flatListRef.current.scrollToEnd({ animated: true }), 100);
     }
-  };
+  }
 
   const renderItem = ({ item }) => (
     <ChatBubble sender={item.sender} text={item.text} />
@@ -89,7 +117,7 @@ const ChatUI = () => {
         ref={flatListRef}
         data={messages}
         renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id}
         style={styles.chatContainer}
         contentContainerStyle={{ paddingHorizontal: 10, paddingBottom: 20 }}
       />
@@ -113,7 +141,7 @@ const ChatUI = () => {
         />
         <TouchableOpacity
           style={[styles.sendButton, { opacity: isLoading ? 0.5 : 1 }]}
-          onPress={handleSend}
+          onPress={handleSendPrompt}
           disabled={isLoading}
         >
 

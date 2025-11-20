@@ -32,7 +32,7 @@ export default function App() {
     <ChatProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={defaultOptions}>
-          {/* <Stack.Screen name="splash" component={SplashScreen} options={splashOptions} /> */}
+          <Stack.Screen name="splash" component={SplashScreen} options={splashOptions} />
           <Stack.Screen name="home" component={HomeScreen} options={homeOptions} />
         </Stack.Navigator>
       </NavigationContainer>
